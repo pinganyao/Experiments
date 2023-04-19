@@ -1,49 +1,62 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
+// function to check if the given credit card number is valid or not
+bool isCreditCardValid(char cardType[], char cardNumber[]) {
+    // check if the card number is of the correct length
+    if (strlen(cardNumber) != 16) {
+        printf("Invalid card number length. Please enter a 16-digit card number.\n");
+        return false;
+    }
+
+    // check if the card number matches the specified card type
+    if (strcmp(cardType, "visa") == 0) {
+        if (cardNumber[0] != '4') {
+            printf("Invalid Visa card number.\n");
+            return false;
+        }
+    } else if (strcmp(cardType, "mastercard") == 0) {
+        if (cardNumber[0] != '5' || (cardNumber[1] < '1' || cardNumber[1] > '5')) {
+            printf("Invalid Mastercard number.\n");
+            return false;
+        }
+    } else {
+        printf("Invalid card type specified.\n");
+        return false;
+    }
+
+    // if all checks pass, the card number is valid
+    printf("Valid card number.\n");
+    return true;
+}
+
+// main function
 int main() {
-    char card_type[10];
-    char card_num[20];
-    int valid = 0;
+    char cardType[20], cardNumber[20];
+    bool isValid = false;
 
-    while (!valid) {
-        // Prompt user for card type
-        printf("Enter card type (visa/mastercard): ");
-        scanf("%s", card_type);
-
-        // Check card type
-        if (strcmp(card_type, "visa") != 0 && strcmp(card_type, "mastercard") != 0) {
-            printf("Invalid card type. Please enter 'visa' or 'mastercard'.\n");
-            continue;
+    // prompt user for card type until a valid one is entered
+    while (!isValid) {
+        printf("Enter card type (visa or mastercard): ");
+        scanf("%s", cardType);
+        if (strcmp(cardType, "visa") != 0 && strcmp(cardType, "mastercard") != 0) {
+            printf("Invalid card type specified. Please enter 'visa' or 'mastercard'.\n");
+        } else {
+            isValid = true;
         }
+    }
 
-        // Prompt user for card number
-        printf("Enter credit card number: ");
-        scanf("%s", card_num);
-
-        // Check if card number is 16 digits
-        if (strlen(card_num) != 16) {
-            printf("Invalid card number length. Please enter 16 digits.\n");
-            continue;
+    // prompt user for card number until a valid one is entered
+    isValid = false;
+    while (!isValid) {
+        if (strcmp(cardType, "visa") == 0) {
+            printf("Enter 16-digit visa card number: ");
+        } else if (strcmp(cardType, "mastercard") == 0) {
+            printf("Enter 16-digit mastercard number: ");
         }
-
-        // Check card type
-        if (strcmp(card_type, "visa") == 0) {
-            if (card_num[0] != '4') {
-                printf("Invalid card number for visa. Please enter a valid visa card number.\n");
-                continue;
-            }
-        } else if (strcmp(card_type, "mastercard") == 0) {
-            if (card_num[0] != '5' || (card_num[1] < '1' || card_num[1] > '5')) {
-                printf("Invalid card number for mastercard. Please enter a valid mastercard number.\n");
-                continue;
-            }
-        }
-
-        // If all checks pass, the card number is valid
-        printf("Card number is valid.\n");
-        valid = 1;
+        scanf("%s", cardNumber);
+        isValid = isCreditCardValid(cardType, cardNumber);
     }
 
     return 0;
